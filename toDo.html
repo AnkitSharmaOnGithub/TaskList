@@ -1,0 +1,120 @@
+<link
+  href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap"
+  rel="stylesheet"
+/>
+
+<style>
+  body {
+    font-family: "Open Sans", sans-serif;
+  }
+
+  #task {
+    padding: 4px;
+    border: none;
+    border-bottom: 1px solid black;
+    outline: none;
+  }
+
+  #task:focus {
+    border-bottom: 2px solid #26a69a;
+  }
+
+  ::-webkit-input-placeholder {
+    font-size: 16px;
+    color: grey;
+  }
+
+  .addTask {
+    background-color: #28a745;
+    border: 1px solid #28a745;
+    color: #ffffff;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    border: 1px solid #dc3545;
+    color: #ffffff;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 5px;
+  }
+
+  section {
+    text-align: center;
+  }
+
+  h2{
+    margin-bottom: 50px; 
+  }
+
+  li{
+    list-style: none;
+  }
+</style>
+
+<section>
+  <h2>Welcome to TASK LIST APP</h2>
+
+  <h4>Please Enter Task Name</h4>
+
+  <div class="taskDiv">
+    <input id="task" type="text" placeholder="Enter Task Name" />
+    <button class="addTask">Add Task</button>
+  </div>
+
+  <div class="taskList">
+    <ul></ul>
+  </div>
+</section>
+<script>
+  document.querySelector(".addTask").addEventListener("click", function() {
+    addTask();
+  });
+
+  document.addEventListener('keydown',event => {
+    if(event.keyCode == 13)
+    {
+      addTask();
+    }
+  })
+
+  function addTask()
+  {
+    if (document.getElementById("task").value != "") {
+      var task_name = document.getElementById("task").value;
+
+      var ul = document.getElementsByTagName("ul")[0];
+      var li = document.createElement("li");
+
+      var btn = document.createElement("button");
+      var btnText = document.createTextNode("Delete");
+      btn.appendChild(btnText);
+      btn.classList.add("btn-danger");
+
+      var textNode = document.createTextNode(task_name);
+      li.appendChild(textNode);
+
+      li.appendChild(btn);
+
+      ul.appendChild(li);
+      addDelteListener();
+    } else {
+      console.log("Blank");
+    }
+  }
+
+  function addDelteListener() {
+    var delete_btns = document.querySelectorAll(".btn-danger");
+  
+    for (var i = 0; i < delete_btns.length; i++) {
+      delete_btns[i].addEventListener("click", function() {
+        this.parentElement.style.display = "none";
+      });
+    }
+    document.getElementById("task").value = " ";
+  }
+</script>
