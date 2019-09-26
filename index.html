@@ -54,6 +54,13 @@
   li{
     list-style: none;
   }
+
+  .taskList{
+    margin-top : 20px;
+  }
+  #taskTable{
+    display: inline-block;
+  }
 </style>
 
 <section>
@@ -67,10 +74,29 @@
   </div>
 
   <div class="taskList">
-    <ul></ul>
+    <table id="taskTable">
+
+    </table>
   </div>
 </section>
+
 <script>
+    
+    
+  window.onload = function(){
+    if(sessionStorage['tasks'] != null){
+        var Data = JSON.parse(sessionStorage['tasks']);
+        var taskData = Data;
+        generateTasks();
+    }
+    else{
+        var Data = '[{"title" : "Add Tasks"}]';
+        var taskData = JSON.parse(Data);
+        generateTasks();
+    }
+  
+ 
+
   document.querySelector(".addTask").addEventListener("click", function() {
     addTask();
   });
@@ -82,13 +108,44 @@
     }
   })
 
+
+  function generateTasks(){
+    for(x of taskData){
+      // console.log(x);
+      var table = document.getElementById('taskTable');
+      var tr = document.createElement("tr");
+
+
+      var td = document.createElement("td");
+      var textNode = document.createTextNode(x['title']);
+      td.appendChild(textNode);
+      tr.appendChild(td);
+
+      var td_New = document.createElement("td");
+      var btn = document.createElement("button");
+      var btnText = document.createTextNode("Delete");
+      btn.appendChild(btnText);
+      btn.classList.add("btn-danger");
+
+      td_New.appendChild(btn);
+      tr.appendChild(td_New);
+
+
+      table.appendChild(tr);
+      addDelteListener();
+      
+    }
+  }
+  
   function addTask()
   {
-    if (document.getElementById("task").value != "") {
-      var task_name = document.getElementById("task").value;
+    var input_data = document.getElementById("task").value;
+    if (input_data !== undefined && input_data !== "") {
+      console.log(input_data);
+      var task_name = input_data;
 
-      var ul = document.getElementsByTagName("ul")[0];
-      var li = document.createElement("li");
+      var table = document.getElementById('taskTable');
+      var tr = document.createElement("tr");
 
       var btn = document.createElement("button");
       var btnText = document.createTextNode("Delete");
@@ -96,12 +153,22 @@
       btn.classList.add("btn-danger");
 
       var textNode = document.createTextNode(task_name);
-      li.appendChild(textNode);
 
-      li.appendChild(btn);
+      var td = document.createElement("td");
+      td.appendChild(textNode);
+      tr.appendChild(td);
 
-      ul.appendChild(li);
+      var td_New = document.createElement("td");
+      td_New.appendChild(btn);
+      tr.appendChild(td_New);
+
+      var newTask = '{"title": "'+task_name+'"}';
+
+      taskData.push(JSON.parse(newTask));
+      
+      sessionStorage['tasks'] = JSON.stringify(taskData);
       addDelteListener();
+      window.location.reload();
     } else {
       console.log("Blank");
     }
@@ -112,9 +179,19 @@
   
     for (var i = 0; i < delete_btns.length; i++) {
       delete_btns[i].addEventListener("click", function() {
-        this.parentElement.style.display = "none";
+        
+        var child = this.parentElement.parentElement;
+        var parent = this.parentElement.parentElement.parentElement;
+
+        parent.removeChild(child);
+
+        taskData.splice(-1,1);
+
+        sessionStorage['tasks'] = JSON.stringify(taskData);
+        window.location.reload();
       });
     }
-    document.getElementById("task").value = " ";
+    // document.getElementById("task").value = "";
   }
+}
 </script>
