@@ -1,7 +1,5 @@
 # Task List App
 
-A small Task List App.
-
 ## It written in JS. It maintains its state. 
 
 ### Try refreshing the Browser.
